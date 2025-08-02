@@ -6,7 +6,7 @@ const studentSchema = new mongoose.Schema({
     batch:{type:String,required:true},
     department:{type:String,required:true},
     subjects:[{type:mongoose.Schema.Types.ObjectId,ref:"Subject"}],
-    totalGpa:{type: Number, min: 0, max: 4.0},
+    grade:[{type:mongoose.Schema.Types.ObjectId,ref:"Grade"}],
 },{
     timestamps:true
 })

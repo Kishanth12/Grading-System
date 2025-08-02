@@ -1,6 +1,7 @@
-import generateToken from "../../lib/utils";
-import User from "../../models/user.model";
+import generateToken from "../../lib/utils.js";
+import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
+import Subject from './../../models/subject.model';
 
 //admin login
 export const adminLogin = async(req,res)=>{
@@ -45,8 +46,53 @@ export const logout= async(req,res)=>{
 }
 
 //add student
+
+export const addStudent=async(req,res)=>{
+    try {
+        const{userId}=req.params
+        const{admissionNo,batch,department}= req.body;
+    const user= await User.findOne({userId})
+    if(!existUser){
+     return res.status(400).json({message:"User Not Found"})
+    }
+    if (user.role !== 'student') {
+      return res.status(400).json({ message: 'User role is not student' });
+    }
+    if(!admissionNo|| !batch || !department)
+      {
+        return res.status(400).json({message:"All fields are required"})
+      }
+    
+    const existingStudent = await Student.findOne({ userId });
+    if (existingStudent) {
+      return res.status(400).json({ message: 'Student details already added' });
+    }
+    const subjects = await Subject.find({ department, batch });
+    const subjectIds = subjects.map((subj) => subj._id);
+
+    const newStudent = new Student({
+      userId,
+      admissionNo,
+      batch,
+      department,
+      subjects: subjectIds, 
+    });
+
+    await newStudent.save();
+
+    res.status(201).json({ message: 'Student details added', student: newStudent });
+
+    } catch (error) {
+      console.log("Error in addStudent controller",error.message)
+        return res.status(500).json({message:"Internal server error"})  
+    }
+
+}
 //delete Student
 //update student
 //add lecturer
+export const addLecture= async(req,res)=> {
+    
+}
 //delete lecturer
 //update lecturer

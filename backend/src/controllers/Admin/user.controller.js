@@ -1,7 +1,7 @@
-import generateToken from "../../lib/utils";
-import User from "../../models/user.model";
+import generateToken from "../../lib/utils.js";
+import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
-import cloudinary from './../../lib/cloudinary';
+import cloudinary from './../../lib/cloudinary.js';
 import validator from 'validator'
 
 
@@ -66,9 +66,8 @@ export const register = async(req,res)=>{
 //update user
 export const updateUser= async(req,res)=>{
     try {
-        const {userId}=req.params._id;
-        const user = await findOne({userId})
-
+        const userId=req.params.id;
+        const user = await User.findOne({_id:userId})
         if(!user){
             return res.status(400).json({message:"user not found"})
         }
@@ -98,7 +97,7 @@ export const updateUser= async(req,res)=>{
     })       
 
     } catch (error) {
-       console.error("Error updating user profile:", err.message);
+       console.log("Error updating user profile:", error.message);
        res.status(500).json({ message: "Server error" });
     }
 }
