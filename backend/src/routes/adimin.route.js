@@ -1,13 +1,12 @@
 import express from 'express'
+import { adminLogin, logout, register, updateUser } from '../controllers/Admin/user.controller';
 
 const router= express.Router()
 
-router.post('/login');
-router.post('/signup');
-router.post('/logout');
-router.put('/update-profile');
-router.post('/addUsers');
-router.put('/users/:id');
+router.post('/login',adminLogin);
+router.post('/register',register);
+router.post('/logout',logout);
+router.put('/users/:id',updateUser);
 router.delete('/users/:id');
 router.get('/users/:id');
 router.post('/addSubjects');
