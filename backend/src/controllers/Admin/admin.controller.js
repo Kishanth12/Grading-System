@@ -2,6 +2,9 @@ import generateToken from "../../lib/utils.js";
 import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
 import Subject from './../../models/subject.model';
+import Lecturer from "../../models/lecturer.model.js";
+import Student from "../../models/student.model.js";
+import Lecturer from './../../models/lecturer.model';
 
 //admin login
 export const adminLogin = async(req,res)=>{
@@ -45,23 +48,25 @@ export const logout= async(req,res)=>{
     }
 }
 
-//add student
 
+//add student
 export const addStudent=async(req,res)=>{
     try {
         const{userId}=req.params
         const{admissionNo,batch,department}= req.body;
-    const user= await User.findOne({userId})
-    if(!existUser){
+
+    if(!admissionNo|| !batch || !department)
+      {
+        return res.status(400).json({message:"All fields are required"})
+      }
+    const user= await User.findById(userId)
+    if(!user){
      return res.status(400).json({message:"User Not Found"})
     }
     if (user.role !== 'student') {
       return res.status(400).json({ message: 'User role is not student' });
     }
-    if(!admissionNo|| !batch || !department)
-      {
-        return res.status(400).json({message:"All fields are required"})
-      }
+   
     
     const existingStudent = await Student.findOne({ userId });
     if (existingStudent) {
@@ -88,11 +93,158 @@ export const addStudent=async(req,res)=>{
     }
 
 }
-//delete Student
-//update student
-//add lecturer
-export const addLecture= async(req,res)=> {
-    
+
+
+//list
+export const listStudents= async (req,res)=>{
+  try {
+    const allStudents =await Student.find({}).select('-subjects -grades -totalGpaPoint')
+    if(allStudents.length == 0){
+      return res.status(400).json({message:"Error in Get Students"})
+    }
+    res.status(200).json({allStudents})
+  } catch (error) {
+     console.log("Error in ListStudent controller",error.message)
+    return res.status(500).json({message:"Internal server error"})  
+  }
 }
+
+
+//delete Student
+export const deleteStudent =async(req,res)=>{
+    try {
+    const student = await Student.findById(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    if (student.userId) {
+      await User.findByIdAndDelete(student.userId);
+    }
+
+    await student.deleteOne();
+
+    res.status(200).json({ message: "Student and associated user deleted successfully" });
+  } catch (error) {
+    console.log("Error in RemoveStudent controller",error.message)
+    return res.status(500).json({message:"Internal server error"})
+  }
+}
+
+//update student
+export const updateStudent = async (req,res)=>{
+  try {
+    const {id}= req.params;
+    const { admissionNo, batch, department} = req.body;
+    const student = await Student.findById(id)
+  if(!student){
+      return res.status(400).json({message:"Student Not Found"})
+    }
+  if (admissionNo) student.admissionNo = admissionNo;
+  if (batch) student.batch = batch;
+  if (department) student.department = department;
+
+  const updatedStudent = await student.save();
+  res.status(200).json({ message: "Student Updated Successfully", student: updatedStudent });
+  } catch (error) {
+    console.error("Error updating student:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+//add lecturer
+export const addLecturer= async(req,res)=> {
+  try {
+    const{userId}=req.params;
+    const{lecturerId,department}=req.body;
+
+    if(!lecturerId|| !department)
+      {
+        return res.status(400).json({message:"All fields are required"})
+      }
+    const user = await User.findById(userId)
+    if(!user){
+      return res.status(400).json({message:"User not Found"})
+    }
+     if (user.role !== 'lecturer') {
+      return res.status(400).json({ message: 'User role is not lecturer' });
+    }
+   
+    const existLecturer = await Lecturer.findOne({userId})
+    if(existLecturer){
+      return res.status(400).json({message:"Lecturer already added"})
+    }
+    const assignedSubjects = await Subject.find({lecturerId})
+    const subjectIds= assignedSubjects.map((sub)=>sub._id)
+    const newLecturer = new Lecturer({
+      userId,
+      lecturerId,
+      department,
+      assignedSubjects:subjectIds
+    })
+    await newLecturer.save()
+    res.status(201).json({ message: 'Lecturer details added', lecturer: newLecturer });
+
+
+  } catch (error) {
+    console.log("Error in addLecturer controller",error.message)
+    return res.status(500).json({message:"Internal server error"})
+  }
+}
+
+
+//list
+export const listLecturer=async(req,res)=>{
+  try {
+    const allLecturers= await Lecturer.find({}.select('-assignedSubjects'))
+  if(allLecturers.length == 0){
+      return res.status(400).json({message:"Error in Get Lecturer"})
+    }
+    res.status(200).json({allLecturers})
+  } catch (error) {
+    console.log("Error in List Lecturer controller",error.message)
+    return res.status(500).json({message:"Internal server error"})   
+  }
+}
+
+
 //delete lecturer
+export const deleteLecturer= async(req,res)=>{
+  try {
+    const lecturer= await Lecturer.findById(req.params.id)
+    if(!lecturer){
+      return res.status(404).json({ message: "lecturer not found" });
+    }
+    if (lecturer.userId) {
+      await User.findByIdAndDelete(lecturer.userId);
+    }
+
+    await lecturer.deleteOne();
+
+    res.status(200).json({ message: "Lecturer and associated user deleted successfully" });
+  } catch (error) {
+    console.log("Error in Delete Lecturer controller",error.message)
+    return res.status(500).json({message:"Internal server error"})
+  }
+}
+
 //update lecturer
+export const updateLecturer= async(req,res)=>{
+try {
+  const{lecturerId,department,assignedSubjects}=req.body;
+  const{id}=req.params;
+  const lecturer =await Lecturer.findById(id);
+  if(!lecturer){
+    return res.status(400).json({message:"Lecturer Not Found"})
+  }
+  if (lecturerId) lecturer.lecturerId = lecturerId;
+  if (department) lecturer.department = department;
+  if (assignedSubjects) lecturer.assignedSubjects = assignedSubjects;
+  
+  const updateLecturer = await lecturer.save();
+  res.status(200).json({ message: "Lecturer Updated Successfully", lecturer: updateLecturer });
+
+} catch (error) {
+   console.error("Error updating Lecturer:", error.message);
+  res.status(500).json({ message: "Internal Server Error" });
+}}

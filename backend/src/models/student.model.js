@@ -5,8 +5,9 @@ const studentSchema = new mongoose.Schema({
     admissionNo:{type:String,required:true,unique:true},
     batch:{type:String,required:true},
     department:{type:String,required:true},
-    subjects:[{type:mongoose.Schema.Types.ObjectId,ref:"Subject"}],
-    grade:[{type:mongoose.Schema.Types.ObjectId,ref:"Grade"}],
+    subjects:[{type:mongoose.Schema.Types.ObjectId,ref:"Subject",default: []}],
+    grades:[{type:mongoose.Schema.Types.ObjectId,ref:"Grade",default: []}],
+    totalGpaPoint: {type: Number,min: 0,max: 4.0,default:0}
 },{
     timestamps:true
 })

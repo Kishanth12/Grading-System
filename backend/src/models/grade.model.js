@@ -10,6 +10,7 @@ const gradeSchema = new mongoose.Schema({
     },
     gradeLetter:{type:String,required:true},
     gpaPoint: {type: Number,required: true,min: 0,max: 4.0},
+
 },{timestamps:true})
 
 const Grade = mongoose.models.Grade || mongoose.model("Grade",gradeSchema)
