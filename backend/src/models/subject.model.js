@@ -6,7 +6,7 @@ const subjectSchema = new mongoose.Schema({
     credit:{type:Number,required:true},
     semester:{type:String,required:true},
     department:{type:String,required:true},
-    lecturer:{type:mongoose.Schema.Types.ObjectId,ref:"Lecturer",required:true},
+    lecturer:{type:mongoose.Schema.Types.ObjectId,ref:"Lecturer"},
     schedule: {
     day: String,          
     startTime: String,   

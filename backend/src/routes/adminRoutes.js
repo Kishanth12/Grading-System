@@ -1,6 +1,7 @@
 import express from 'express'
 import {addLecturer, addStudent, adminLogin, deleteLecturer, deleteStudent, listLecturer, listStudents, logout, updateLecturer } from './../controllers/Admin/admin.controller.js';
 import { register, updateUser } from './../controllers/Admin/user.controller.js';
+import { addSubject, deleteSubject, editSubject, listGrade } from '../controllers/Admin/acadamic.controller.js';
 
 const router= express.Router()
 
@@ -21,10 +22,11 @@ router.get('/lecturers',listLecturer);
 router.delete('/lecturer/:id',deleteLecturer)
 router.put('/lecturer/:id',updateLecturer)
 //router.get('/LecturerInfo/:id')
-// router.get('/subjects');
-// router.post('/addSubjects');
-// router.put('/subjects/:id');
-//router.delete('/subjects/:id');
-// router.get('/grades');
+router.get('/subjects');
+router.post('/addSubjects',addSubject);
+router.put('/subjects/:id',editSubject);
+router.delete('/subjects/:id',deleteSubject);
+router.get('/grades',listGrade);
+//router.post('/finalGpa)
 
 export default router;

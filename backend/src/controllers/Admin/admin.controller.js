@@ -100,7 +100,7 @@ export const listStudents= async (req,res)=>{
   try {
     const allStudents =await Student.find({}).select('-subjects -grades -totalGpaPoint')
     if(allStudents.length == 0){
-      return res.status(400).json({message:"Error in Get Students"})
+      return res.status(400).json({message:"no Students"})
     }
     res.status(200).json({allStudents})
   } catch (error) {
