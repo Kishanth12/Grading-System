@@ -1,6 +1,8 @@
 import Subject from "../../models/subject.model";
-import Lecturer from './../../models/lecturer.model';
-import Grade from './../../models/grade.model';
+import Lecturer from '../../models/lecturer.model';
+import Grade from '../../models/grade.model';
+import Student from "../../models/student.model";
+import Student from '../../models/student.model';
 
 export const addSubject = async (req, res) => {
   try {
@@ -115,8 +117,20 @@ export const listGrade = async (req,res)=>{
 //calculate total gpa
 export const totalGpa= async(req,res)=>{
   try {
-    
+    const {id} =req.params;
+    const grades = await Grade.find({student:id})
+
+    if(grades.length == 0){
+      return res.status(404).json({message:"Grades not found for This Student"})
+    }
+  const totalGpa = grades.reduce((sum, grade) => sum + grade.gpaPoint, 0) / grades.length;
+
+  const roundedGpa = parseFloat(totalGpa.toFixed(2));
+  await Student.findByIdAndUpdate(id,{totalGpaPoint:roundedGpa})
+  
+  res.status(200).json({studentId:id,totalGpa:roundedGpa,subjects:grades.length})
   } catch (error) {
-    
+    console.error("Error calculating total GPA:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
 }

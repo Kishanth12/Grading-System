@@ -4,7 +4,9 @@ const lectureSchema = new mongoose.Schema({
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"User",required:true},
     lecturerId:{type:String,required:true},
     department:{type:String,required:true},
-    assignedSubjects:[{type:mongoose.Schema.Types.ObjectId,ref:"Subject",default:[]}]},
+    assignedSubjects:[{type:mongoose.Schema.Types.ObjectId,ref:"Subject",default:[]}],
+    students:[{ type: mongoose.Schema.Types.ObjectId, ref: "Student", default: [] }]
+},
     {
         timestamps:true
     }

@@ -1,7 +1,7 @@
 import express from 'express'
 import {addLecturer, addStudent, adminLogin, deleteLecturer, deleteStudent, listLecturer, listStudents, logout, updateLecturer } from './../controllers/Admin/admin.controller.js';
 import { register, updateUser } from './../controllers/Admin/user.controller.js';
-import { addSubject, deleteSubject, editSubject, listGrade } from '../controllers/Admin/acadamic.controller.js';
+import { addSubject, deleteSubject, editSubject, listGrade, totalGpa } from '../controllers/Admin/academic.controller.js';
 
 const router= express.Router()
 
@@ -27,6 +27,6 @@ router.post('/addSubjects',addSubject);
 router.put('/subjects/:id',editSubject);
 router.delete('/subjects/:id',deleteSubject);
 router.get('/grades',listGrade);
-//router.post('/finalGpa)
+router.post('/finalGpa',totalGpa)
 
 export default router;

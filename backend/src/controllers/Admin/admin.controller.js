@@ -176,11 +176,17 @@ export const addLecturer= async(req,res)=> {
     }
     const assignedSubjects = await Subject.find({lecturerId})
     const subjectIds= assignedSubjects.map((sub)=>sub._id)
+
+    const students = await Student.find({subjects: { $in: subjectIds } }).select("_id");
+
+    const studentIds = students.map(s => s._id)
+
     const newLecturer = new Lecturer({
       userId,
       lecturerId,
       department,
-      assignedSubjects:subjectIds
+      assignedSubjects:subjectIds,
+      students:studentIds
     })
     await newLecturer.save()
     res.status(201).json({ message: 'Lecturer details added', lecturer: newLecturer });
@@ -235,14 +241,21 @@ try {
   const{id}=req.params;
   const lecturer =await Lecturer.findById(id);
   if(!lecturer){
-    return res.status(400).json({message:"Lecturer Not Found"})
+    return res.status(404).json({message:"Lecturer Not Found"})
   }
   if (lecturerId) lecturer.lecturerId = lecturerId;
   if (department) lecturer.department = department;
-  if (assignedSubjects) lecturer.assignedSubjects = assignedSubjects;
+  if (assignedSubjects){
+   lecturer.assignedSubjects = assignedSubjects;
+
+  const students = await Student.find({subjects: { $in: assignedSubjects },}).select("_id");
+
+  const studentIds = students.map((s) => s._id);
+  lecturer.students = studentIds;
+  }
   
-  const updateLecturer = await lecturer.save();
-  res.status(200).json({ message: "Lecturer Updated Successfully", lecturer: updateLecturer });
+  const updatedLecturer = await lecturer.save();
+  res.status(200).json({ message: "Lecturer Updated Successfully", lecturer: updatedLecturer });
 
 } catch (error) {
    console.error("Error updating Lecturer:", error.message);
