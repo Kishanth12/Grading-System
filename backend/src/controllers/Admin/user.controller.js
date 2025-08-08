@@ -3,6 +3,9 @@ import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
 import cloudinary from './../../lib/cloudinary.js';
 import validator from 'validator'
+import Lecturer from './../../models/lecturer.model';
+import Lecturer from "./../../models/lecturer.model";
+import Student from "../../models/student.model.js";
 
 
 //register for user
@@ -100,4 +103,50 @@ export const updateUser= async(req,res)=>{
        console.log("Error updating user profile:", error.message);
        res.status(500).json({ message: "Server error" });
     }
+}
+
+//admin info
+export const adminInfo = async(req,res)=>{
+  try {
+    const adminId = req.user._id;
+    const admin = await User.find({_id:adminId});
+    if(!admin){
+      return res.status(404).json({message:"Not Found"})
+    }
+    res.status(200).json({admin})
+
+  } catch (error) {
+    console.log("Error in  admin profile:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// lecturerInfo
+export const lecturerInfo = async(req,res)=>{
+  try {
+    const{id} = req.params;
+    const lecturer= await Lecturer.findById(id).populate("userId","fullName email password profilePic")
+    if(!lecturer){
+      return res.status(404).json({message:"Not Found"})
+    }
+    res.status(200).json({lecturer})
+  } catch (error) {
+    console.log("Error in lecturer profile:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+// StudentInfo
+export const studentInfo = async(req,res)=>{
+  try {
+    const{id} = req.params;
+    const student= await Student.findById(id).populate("userId","fullName email password profilePic")
+    if(!student){
+      return res.status(404).json({message:"Not Found"})
+    }
+    res.status(200).json({student})
+  } catch (error) {
+    console.log("Error in Student profile:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
 }

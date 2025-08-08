@@ -37,11 +37,11 @@ export const profile=async(req,res)=>{
     try {
     const id = req.user._id;
     const lecturer = await Lecturer.findById(id)
-    .select("-students")
-    .populate(
-        "userId","fullName email profilePic"
-    )
-    .populate("assignedSubjects", "name code")
+    .select("userId")
+    .populate({
+        path:"userId",
+      select:"fullName email profilePic"
+    })
     if(!lecturer){
         return res.status(404).json({message:"User not found"})    
     }
