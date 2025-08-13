@@ -1,10 +1,10 @@
-import Lecturer from "../../models/lecturer.model";
-import Subject from "../../models/subject.model";
+import Lecturer from "../../models/lecturer.model.js";
+import Subject from "../../models/subject.model.js";
 
 //list students for lecturers
 export const listStudents = async (req, res) => {
   try {
-    const lecturerId = req.user._id;// get from midddleware
+    const lecturerId = req.user._id;
     const lecturer = await Lecturer.findById(lecturerId)
       .populate({
         path: "students",
@@ -34,7 +34,7 @@ export const listStudents = async (req, res) => {
 //get single student details
 export const infoStudents = async (req, res) => {
   try {
-    const lecturerId = req.user._id;// get from midddleware
+    const lecturerId = req.user._id;
     const {id} =req.params;
     const lecturer = await Lecturer.findById(lecturerId)
       .populate({

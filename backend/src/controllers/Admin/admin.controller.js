@@ -1,15 +1,16 @@
 import generateToken from "../../lib/utils.js";
 import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
-import Subject from './../../models/subject.model';
+import Subject from './../../models/subject.model.js';
 import Lecturer from "../../models/lecturer.model.js";
 import Student from "../../models/student.model.js";
-import Lecturer from './../../models/lecturer.model';
+
 
 //admin login
 export const adminLogin = async(req,res)=>{
     try {
         const {email,password}= req.body;
+        console.log("Incoming login:", email, password);
         const user =await User.findOne({email, role:"admin"})
         if(!user){
             return res.status(400).json({message:"Invalid credentials"})
@@ -202,11 +203,13 @@ export const addLecturer= async(req,res)=> {
 //list
 export const listLecturer=async(req,res)=>{
   try {
-    const allLecturers= await Lecturer.find({}.select('-assignedSubjects'))
+    const allLecturers= await Lecturer.find({})
+    .select('-assignedSubjects')
+    .populate('userId', 'fullName');
   if(allLecturers.length == 0){
       return res.status(400).json({message:"Error in Get Lecturer"})
     }
-    res.status(200).json({allLecturers})
+    res.status(200).json(allLecturers)
   } catch (error) {
     console.log("Error in List Lecturer controller",error.message)
     return res.status(500).json({message:"Internal server error"})   

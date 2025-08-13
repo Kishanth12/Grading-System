@@ -1,5 +1,5 @@
-import Lecturer from '../../models/lecturer.model';
-import User from './../../models/user.model';
+import Lecturer from '../../models/lecturer.model.js';
+import User from './../../models/user.model.js';
 
 //login
 export const login=async(req,res)=>{

@@ -1,8 +1,8 @@
-import Subject from "../../models/subject.model";
-import Lecturer from '../../models/lecturer.model';
-import Grade from '../../models/grade.model';
-import Student from "../../models/student.model";
-import Student from '../../models/student.model';
+import Subject from "../../models/subject.model.js";
+import Lecturer from '../../models/lecturer.model.js';
+import Grade from '../../models/grade.model.js';
+import Student from "../../models/student.model.js";
+
 
 export const addSubject = async (req, res) => {
   try {
@@ -70,7 +70,7 @@ export const editSubject = async (req,res)=>{
     if(credit) subject.credit =credit;
     if(semester) subject.semester =semester;
     if(department) subject.department =department;
-    if(lecturerId) subject.lecturerId =lecturerId;
+    if(lecturerId) subject.lecturer =lecturerId;
     if(schedule) subject.schedule =schedule;
 
     const updateSubject = await subject.save();

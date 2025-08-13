@@ -1,5 +1,5 @@
-import Grade from "../../models/grade.model";
-import Lecturer from "../../models/lecturer.model";
+import Grade from "../../models/grade.model.js";
+
 
 export const addGrade = async (req, res) => {
   try {

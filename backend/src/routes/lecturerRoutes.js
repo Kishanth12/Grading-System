@@ -1,19 +1,18 @@
 import express from 'express'
-import { login, profile } from './../controllers/Lecturers/lecturer.auth.controller';
-import { assignedSubjects, infoStudents, listStudents } from './../controllers/Lecturers/lecturer.controllers';
-import { addGrade, updateGrade } from './../controllers/Lecturers/grade.controller';
-import { logout } from '../controllers/Admin/admin.controller';
+import { login, profile } from './../controllers/Lecturers/lecturer.auth.controller.js';
+import { assignedSubjects, infoStudents, listStudents } from './../controllers/Lecturers/lecturer.controllers.js';
+import { addGrade, updateGrade } from './../controllers/Lecturers/grade.controller.js';
+import { protectRoute } from './../middleware/auth.middleware.js';
 
 const router = express.Router()
 
 router.post('/login',login);
-router.post('/logout',logout);
-router.get('/profile',profile);
-router.get('/students',listStudents);
-router.get('/students/:id',infoStudents);
-router.post('/grades',addGrade);
-router.put('/grades/:id',updateGrade);
-router.get('/subjects/assigned',assignedSubjects);
+router.get('/profile',protectRoute("lecturer"),profile);
+router.get('/students',protectRoute("lecturer"),listStudents);
+router.get('/students/:id',protectRoute("lecturer"),infoStudents);
+router.post('/grades',protectRoute("lecturer"),addGrade);
+router.put('/grades/:id',protectRoute("lecturer"),updateGrade);
+router.get('/subjects/assigned',protectRoute("lecturer"),assignedSubjects);
 
 
 

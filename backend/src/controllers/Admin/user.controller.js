@@ -3,16 +3,15 @@ import User from "../../models/user.model.js";
 import bcrypt from 'bcrypt'
 import cloudinary from './../../lib/cloudinary.js';
 import validator from 'validator'
-import Lecturer from './../../models/lecturer.model';
-import Lecturer from "./../../models/lecturer.model";
+import Lecturer from "./../../models/lecturer.model.js";
 import Student from "../../models/student.model.js";
 
 
 //register for user
 export const register = async(req,res)=>{
     try {
-        const {fullName,email,password,role,profilePic}= req.body;
-        if(!fullName || !email || !password || !role || !profilePic){
+        const {fullName,email,password,role}= req.body;
+        if(!fullName || !email || !password || !role || !req.file){
         return res.status(400).json({message :"All fields are required"})
       }
       if (password.length <6){
@@ -32,7 +31,7 @@ export const register = async(req,res)=>{
       const hashedPassword= await bcrypt.hash(password,salt)
 
       //uploadPic
-      const uploaderResponse = await cloudinary.uploader.upload(profilePic)
+      const uploaderResponse = await cloudinary.uploader.upload(req.file.path)
       if(!uploaderResponse){
         return res.status(400).json({message:"error in upload profilePic"})
       }
