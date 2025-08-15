@@ -17,7 +17,7 @@ export const useAdminStore = create((set,get)=>({
       toast.success("User Added")
       return res.data;
       } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data?.message || "Something went wrong")
       }
     },
 
@@ -27,7 +27,7 @@ export const useAdminStore = create((set,get)=>({
         set(state=>({students:[...state.students,res.data]}))
         toast.success("Students Added")
      } catch (error) {
-        toast.error(error.response.data.message)
+        toast.error(error.response?.data?.message || "Something went wrong")
      }
     },
     addLecturer : async(userId,data)=>{
@@ -37,7 +37,7 @@ export const useAdminStore = create((set,get)=>({
       toast.success("Lecturer Added")
       return res.data;
       } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data?.message || "Something went wrong")
       }
     },
 
@@ -47,7 +47,7 @@ export const useAdminStore = create((set,get)=>({
          set(state=>({subjects:[...state.subjects,res.data]}))
          toast.success("Subject Added")
       } catch (error) {
-          toast.error(error.response.data.message)
+          toast.error(error.response?.data?.message || "Something went wrong")
 
       }
     },
@@ -56,7 +56,23 @@ export const useAdminStore = create((set,get)=>({
          const res = await axiosInstance.get('/admin/lecturers')
          set({lecturers:res.data})
       } catch (error) {
-         toast.error(error.response.data.message)
+         toast.error(error.response?.data?.message || "Something went wrong")
       }
-    }  
+    } ,
+    listStudents:async()=>{
+      try {
+         const res = await axiosInstance.get('/admin/students')
+         set({students:res.data})
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong")
+      }
+    },
+    listSubjects:async()=>{
+      try {
+        const res = await axiosInstance.get('/admin/subjects')
+        set({subjects:res.data}) 
+      } catch (error) {
+       toast.error(error.response?.data?.message || "Something went wrong")
+      }
+    }
 }))

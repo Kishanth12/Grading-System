@@ -45,11 +45,11 @@ export const addSubject = async (req, res) => {
 //listSubject
 export const listSubject =async(req,res)=>{
   try {
-    const subjects = await Subject.find({}).select('-lecturer -schedule')
+    const subjects = await Subject.find({})
     if(subjects.length == 0){
       return res.status(400).json({message:"No Subjects"})
     }
-    res.status(200).json({subjects:subjects})
+    res.status(200).json(subjects)
   } catch (error) {
     console.error("Error in get subject:", error.message);
     res.status(500).json({ message: "Server error" });

@@ -99,11 +99,12 @@ export const addStudent=async(req,res)=>{
 //list
 export const listStudents= async (req,res)=>{
   try {
-    const allStudents =await Student.find({}).select('-subjects -grades -totalGpaPoint')
+    const allStudents =await Student.find({})
+    .populate('userId', 'fullName email password profilePic phoneNo address');
     if(allStudents.length == 0){
       return res.status(400).json({message:"no Students"})
     }
-    res.status(200).json({allStudents})
+    res.status(200).json(allStudents)
   } catch (error) {
      console.log("Error in ListStudent controller",error.message)
     return res.status(500).json({message:"Internal server error"})  
@@ -204,8 +205,7 @@ export const addLecturer= async(req,res)=> {
 export const listLecturer=async(req,res)=>{
   try {
     const allLecturers= await Lecturer.find({})
-    .select('-assignedSubjects')
-    .populate('userId', 'fullName');
+    .populate('userId', 'fullName email password profilePic phoneNo address');
   if(allLecturers.length == 0){
       return res.status(400).json({message:"Error in Get Lecturer"})
     }

@@ -10,8 +10,8 @@ import Student from "../../models/student.model.js";
 //register for user
 export const register = async(req,res)=>{
     try {
-        const {fullName,email,password,role}= req.body;
-        if(!fullName || !email || !password || !role || !req.file){
+        const {fullName,email,password,role,phoneNo,address}= req.body;
+        if(!fullName || !email || !password || !role || !req.file ||phoneNo || address){
         return res.status(400).json({message :"All fields are required"})
       }
       if (password.length <6){
@@ -41,7 +41,9 @@ export const register = async(req,res)=>{
         email,
         password:hashedPassword,
         role,
-        profilePic:uploaderResponse.secure_url
+        profilePic:uploaderResponse.secure_url,
+        phoneNo,
+        address
       })
 
       if(newUser){
@@ -54,6 +56,8 @@ export const register = async(req,res)=>{
             email: newUser.email,
             role:newUser.role,
             profilePic :newUser.profilePic,
+            phoneNo:newUser.phoneNo,
+            address:newUser.address
          })
       }else{
         return res.status(400).json({message:"invalid user data"})
@@ -76,7 +80,9 @@ export const updateUser= async(req,res)=>{
          user.fullName = req.body.fullName || user.fullName;
          user.email = req.body.email || user.email;
          user.role = req.body.role || user.role;
-        
+        user.phoneNo = req.body.phoneNo || user.phoneNo;
+        user.address = req.body.address || user.address
+        ;
          if (req.body.password) {
          const salt = await bcrypt.genSalt(10);
          user.password = await bcrypt.hash(req.body.password, salt);
@@ -95,6 +101,8 @@ export const updateUser= async(req,res)=>{
         email: updatedUser.email,
         role: updatedUser.role,
         profilePic: updatedUser.profilePic,
+        phoneNo:updateUser.phoneNo,
+        address:updateUser.address
       },
     })       
 

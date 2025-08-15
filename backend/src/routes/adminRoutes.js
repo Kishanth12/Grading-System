@@ -22,7 +22,7 @@ router.get('/adminInfo',protectRoute("admin"),adminInfo);
 
 //student
 router.post('/students/:userId',addStudent)//protectRoute("admin")
-router.get('/students',protectRoute("admin"),listStudents);
+router.get('/students',listStudents);//,protectRoute("admin")
 router.delete('/student/:id',protectRoute("admin"),deleteStudent)
 router.put('/student/:id',protectRoute("admin"),updateStudent)
 router.get('/studentInfo/:id',protectRoute("admin"),studentInfo)
@@ -38,7 +38,7 @@ router.get('/LecturerInfo/:id',protectRoute("admin"),lecturerInfo)
 
 //subjects
 router.post('/addSubjects',addSubject);//,protectRoute("admin")
-router.get('/subjects',protectRoute("admin"),listSubject);
+router.get('/subjects',listSubject);//,protectRoute("admin")
 router.put('/subjects/:id',protectRoute("admin"),editSubject);
 router.delete('/subjects/:id',protectRoute("admin"),deleteSubject);
 
