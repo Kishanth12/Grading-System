@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useAdminStore } from "../../store/useAdminStore";
 import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
+import toast from 'react-hot-toast'
 
 const AddLecturer = () => {
   const { userId } = useParams();
@@ -9,7 +10,15 @@ const AddLecturer = () => {
     department: "",
   });
 
-  const { addLecturer } = useAdminStore();
+   const addLecturer = async(userId,data)=>{
+      try {
+      const res = await axiosInstance.post(`/admin/lecturer/${userId}`,data)
+      toast.success("Lecturer Added")
+      return res.data;
+      } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong")
+      }
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

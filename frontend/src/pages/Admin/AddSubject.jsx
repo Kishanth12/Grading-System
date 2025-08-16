@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAdminStore } from "../../store/useAdminStore";
-import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
+import toast from 'react-hot-toast'
 
 const AddSubject = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,15 @@ const AddSubject = () => {
     semester:'',
   });
 
-  const { addSubject } = useAdminStore();
+ const addSubject = async(data)=>{
+      try {
+         const res = await axiosInstance.post('/admin/addSubjects',data)
+         toast.success("Subject Added")
+      } catch (error) {
+          toast.error(error.response?.data?.message || "Something went wrong")
+
+      }
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +41,7 @@ const AddSubject = () => {
             onChange={(e) =>
               setFormData({ ...formData, subCode: e.target.value })
             }
-            className="ml-6 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            className="ml-5 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
           
           />
         </div>
@@ -47,7 +55,7 @@ const AddSubject = () => {
             onChange={(e) =>
               setFormData({ ...formData, name: e.target.value })
             }
-            className="ml-6 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            className="ml-12 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
           
           />
         </div>
@@ -61,7 +69,7 @@ const AddSubject = () => {
             onChange={(e) =>
               setFormData({ ...formData, credit: e.target.value })
             }
-            className="ml-6 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            className="ml-12 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
           
           />
         </div>
@@ -108,7 +116,7 @@ const AddSubject = () => {
             className="text-lg p-2 text-gray-50 bg-gray-700 rounded-md"
             type="submit"
           >
-            Add Student
+            Add Subject
           </button>
         </div>
       </form>

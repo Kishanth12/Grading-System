@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useAdminStore } from "../../store/useAdminStore";
+import { axiosInstance } from "../../lib/axios";
+import toast from 'react-hot-toast'
 import { useParams } from "react-router-dom";
 
 const AddStudent = () => {
@@ -10,7 +11,14 @@ const AddStudent = () => {
     department: "",
   });
 
-  const { addStudents } = useAdminStore();
+  const addStudents= async(userId,data)=>{
+     try {
+        const res = await axiosInstance.post(`/admin/students/${userId}`,data)
+        toast.success("Students Added")
+     } catch (error) {
+        toast.error(error.response?.data?.message || "Something went wrong")
+     }
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,8 +29,8 @@ const AddStudent = () => {
       <div className="text-3xl font-bold text-gray-700 mt-6">
         <h1>Add Student</h1>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="mt-6">
+      <form onSubmit={handleSubmit} className="flex flex-col justify-start">
+        <div className="mt-8">
           <label>
             <span className="text-xl text-gray-700">Admission No</span>
           </label>
@@ -44,7 +52,7 @@ const AddStudent = () => {
             onChange={(e) =>
               setFormData({ ...formData, department: e.target.value })
             }
-            className="ml-6 text-md text-gray-950"
+            className="ml-8 text-md text-gray-950"
           >
             <option value="">--Select--</option>
             <option value="HNDIT">HNDIT</option>
@@ -61,7 +69,7 @@ const AddStudent = () => {
             onChange={(e) =>
               setFormData({ ...formData, batch: e.target.value })
             }
-            className="ml-14 text-md text-gray-950"
+            className="ml-20 text-md text-gray-950"
             name="batch"
           >
             <option value="">--Select--</option>

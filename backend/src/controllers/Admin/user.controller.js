@@ -11,14 +11,14 @@ import Student from "../../models/student.model.js";
 export const register = async(req,res)=>{
     try {
         const {fullName,email,password,role,phoneNo,address}= req.body;
-        if(!fullName || !email || !password || !role || !req.file ||phoneNo || address){
+        if(!fullName || !email || !password || !role || !req.file || !phoneNo || !address){
         return res.status(400).json({message :"All fields are required"})
       }
       if (password.length <6){
         return res.status(400).json({message:"password is to short"})
       }
       if(!validator.isEmail(email)){
-        return res.status(500).json({success:false,message:"Please enter a valid Email"})
+        return res.status(400).json({success:false,message:"Please enter a valid Email"})
      }
 
       const existingUser = await User.findOne({email})
@@ -132,7 +132,7 @@ export const adminInfo = async(req,res)=>{
 export const lecturerInfo = async(req,res)=>{
   try {
     const{id} = req.params;
-    const lecturer= await Lecturer.findById(id).populate("userId","fullName email password profilePic")
+    const lecturer= await Lecturer.findById(id).populate("userId","fullName email password profilePic phoneNo address")
     if(!lecturer){
       return res.status(404).json({message:"Not Found"})
     }
@@ -147,7 +147,7 @@ export const lecturerInfo = async(req,res)=>{
 export const studentInfo = async(req,res)=>{
   try {
     const{id} = req.params;
-    const student= await Student.findById(id).populate("userId","fullName email password profilePic")
+    const student= await Student.findById(id).populate("userId","fullName email password profilePic  phoneNo address")
     if(!student){
       return res.status(404).json({message:"Not Found"})
     }

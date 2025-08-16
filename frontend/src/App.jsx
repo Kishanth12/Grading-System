@@ -12,6 +12,7 @@ import Lecturer from './pages/Admin/Lecturer'
 import LecturerInfo from './pages/Admin/LecturerInfo'
 import Students from './pages/Admin/Students'
 import Subjects from './pages/Admin/Subjects'
+import StudentInfo from './pages/Admin/StudentInfo'
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
       <hr />
       <Routes>
         <Route path="/lecturerInfo/:id" element={<LecturerInfo />} />
+        <Route path="/studentInfo/:id" element={<StudentInfo />} />
         <Route path="/login" element={<Login />} />
 
         <Route

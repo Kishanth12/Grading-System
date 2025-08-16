@@ -1,11 +1,22 @@
-import { useAdminStore } from '../../store/useAdminStore'
+import { axiosInstance } from "../../lib/axios";
+import toast from 'react-hot-toast'
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
+import { useState } from 'react';
 
 const Students = () => {
 
-  const {listStudents,students}=useAdminStore();
+  const[students,setStudents]=useState([])
+  
+   const listStudents = async()=>{
+      try {
+         const res = await axiosInstance.get('/admin/students')
+         setStudents(res.data)
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong")
+      }
+    }
 
   useEffect(()=>{
     listStudents()
@@ -17,7 +28,7 @@ const Students = () => {
         <h1 className='text-2xl text-gray-800 font-bold'>Student List</h1>
         </div>
       <div className='mt-6'>
-        <table className='divide-y divide-gray-300 rounded-lg shadow-md min-w-full overflow-y-auto '>
+        <table className='divide-y divide-gray-300 shadow-md min-w-full overflow-y-auto '>
           <thead className='bg-gray-200 text-gray-700 uppercase text-sm'>
           <tr>
           <th className= 'px-6 py-3 text-left'>Admission No</th>

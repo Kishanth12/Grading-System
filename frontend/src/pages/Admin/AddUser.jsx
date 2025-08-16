@@ -1,19 +1,30 @@
-import { useRef, useState } from "react";
-import { useAdminStore } from "../../store/useAdminStore";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
+import toast from "react-hot-toast";
 
 const AddUser = () => {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     role: "",
+    phoneNo: "",
+    address: "",
   });
 
   const [profilePicFile, setProfilePicFile] = useState(null);
 
-  const { addUsers } = useAdminStore();
+  const addUsers = async (data) => {
+    try {
+      const res = await axiosInstance.post("/admin/register", data);
+      toast.success("User Added");
+      return res.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -30,6 +41,8 @@ const AddUser = () => {
     data.append("email", formData.email);
     data.append("password", formData.password);
     data.append("role", formData.role);
+    data.append("phoneNo", formData.phoneNo);
+    data.append("address", formData.address);
     if (profilePicFile) {
       data.append("profilePic", profilePicFile);
     }
@@ -37,9 +50,9 @@ const AddUser = () => {
     const newUser = await addUsers(data);
     if (newUser?._id) {
       if (formData.role === "student") {
-        Navigate(`/addStudent/${newUser._id}`);
+        navigate(`/addStudent/${newUser._id}`);
       } else if (formData.role === "lecturer") {
-        Navigate(`/addLecturer/${newUser._id}`);
+        navigate(`/addLecturer/${newUser._id}`);
       } else if (formData.role === "admin") {
         toast.success("Admin user registered successfully");
       }
@@ -49,6 +62,8 @@ const AddUser = () => {
         email: "",
         password: "",
         role: "",
+        phoneNo: "",
+        address: "",
       });
       setProfilePicFile(null);
     }
@@ -59,7 +74,7 @@ const AddUser = () => {
       <div className="text-3xl font-bold text-gray-700 mt-6">
         <h1>Register User</h1>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col justify-start items-start">
         <div className="mt-10">
           <label>
             <span className="text-xl text-gray-700">UserName</span>
@@ -74,7 +89,7 @@ const AddUser = () => {
             name="name"
           />
         </div>
-        <div className="mt-10">
+        <div className="mt-6">
           <label>
             <span className="text-xl text-gray-700">Email</span>
           </label>
@@ -83,7 +98,7 @@ const AddUser = () => {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="ml-20 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            className="ml-16 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
             type="text"
             name="email"
             required
@@ -98,9 +113,36 @@ const AddUser = () => {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="ml-[2.75rem] w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            className="ml-8 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
             type="password"
             name="password"
+            required
+          />
+        </div>
+        <div className="mt-6">
+          <label>
+            <span className="text-xl text-gray-700">Phone No</span>
+          </label>
+          <input
+            value={formData.phoneNo}
+            onChange={(e) =>
+              setFormData({ ...formData, phoneNo: e.target.value })
+            }
+            className="ml-6 w-56 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
+            type="tel"
+            required
+          />
+        </div>
+        <div className="mt-6">
+          <label>
+            <span className="text-xl text-gray-700">Address</span>
+          </label>
+          <textarea
+            value={formData.address}
+            onChange={(e) =>
+              setFormData({ ...formData, address: e.target.value })
+            }
+            className="ml-10 w-56 h-10 p-1 border-2 border-gray-500 hover:border-gray-950 rounded-md"
             required
           />
         </div>
@@ -123,6 +165,7 @@ const AddUser = () => {
           </label>
           <select
             value={formData.role}
+            required
             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
             className="ml-6 text-md text-gray-950 p-1 bg-gray-400"
           >

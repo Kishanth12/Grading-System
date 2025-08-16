@@ -25,7 +25,7 @@ router.post('/students/:userId',addStudent)//protectRoute("admin")
 router.get('/students',listStudents);//,protectRoute("admin")
 router.delete('/student/:id',protectRoute("admin"),deleteStudent)
 router.put('/student/:id',protectRoute("admin"),updateStudent)
-router.get('/studentInfo/:id',protectRoute("admin"),studentInfo)
+router.get('/studentInfo/:id',studentInfo)//,protectRoute("admin")
 
 
 //lecturer
@@ -33,7 +33,7 @@ router.post('/lecturer/:userId',addLecturer)//protectRoute("admin")
 router.get('/lecturers',listLecturer);//,protectRoute("admin")
 router.delete('/lecturer/:id',protectRoute("admin"),deleteLecturer)
 router.put('/lecturer/:id',protectRoute("admin"),updateLecturer)
-router.get('/LecturerInfo/:id',protectRoute("admin"),lecturerInfo)
+router.get('/lecturerInfo/:id',lecturerInfo)//,protectRoute("admin"),
 
 
 //subjects
