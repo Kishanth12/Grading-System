@@ -1,4 +1,5 @@
 import Lecturer from "../../models/lecturer.model.js";
+import Student from "../../models/student.model.js";
 import Subject from "../../models/subject.model.js";
 
 //list students for lecturers
@@ -30,6 +31,38 @@ export const listStudents = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getStudentSubjects = async (req, res) => {
+  try {
+    const lecturerId = req.user._id; // logged-in lecturer
+    const studentId = req.params.studentId;
+
+    const student = await Student.findById(studentId).populate({
+      path: "subjects",
+      select: "name"
+    });
+
+    if (!student) return res.status(404).json({ message: "Student not found" });
+
+    const lecturer = await Lecturer.findById(lecturerId).populate({
+      path: "assignedSubjects",
+      select: "name"
+    });
+
+    if (!lecturer) return res.status(404).json({ message: "Lecturer not found" });
+
+    const studentSubjects = student.subjects.filter(studentSub =>
+      lecturer.assignedSubjects.some(lectSub => lectSub._id.equals(studentSub._id))
+    );
+
+    res.status(200).json({ subjects: studentSubjects });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 //get single student details
 export const infoStudents = async (req, res) => {

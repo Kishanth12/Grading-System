@@ -15,7 +15,7 @@ import { assets } from "./../assets/assets";
 import { NavLink } from "react-router-dom";
 
 
-const SideBar = () => {
+const SideBar = ({role}) => {
   const [openSection, setOpenSection] = useState(null);
 
   const toggleSection = (section) => {
@@ -34,6 +34,7 @@ const SideBar = () => {
           <LayoutDashboard />
           <h1 className="ml-4">Dashboard</h1>
         </div>
+         {role == "admin" && 
         <div className="mt-9 ">
           <div className="flex justify-between  py-1 mx-1 rounded-md ">
             <div className="pl-8 flex justify-center items-center ">
@@ -66,10 +67,37 @@ const SideBar = () => {
             </div>
           )}
         </div>
+        }
+        {role == "lecturer" &&
+         <div className="mt-9 ">
+          <div className="flex justify-between  py-1 mx-1 rounded-md ">
+            <div className="pl-8 flex justify-center items-center ">
+              <img src={assets.student} className="w-7" alt="students" />
+              <h1 className="pl-2">Lecturer Students</h1>
+            </div>
+            <button className="pr-1" onClick={() => toggleSection("student")}>
+              {openSection === "student" ? <ChevronUp /> : <ChevronDown />}
+            </button>
+          </div>
+          {openSection === "student" && (
+            <div className="mt-3 text-lg">
+              <NavLink to="/students" className={navClass}>
+                <div className="mt-1  py-1 pl-10">
+                  <div className="flex items-center gap-2">
+                    <ListTree />
+                    Students List
+                  </div>
+                </div>
+              </NavLink>
+            </div>
+          )}
+        </div>
+        }
+        {role == "lecturer" && 
         <div className="mt-9">
           <div className="flex justify-between py-1 mx-1 rounded-md">
             <div className="pl-7 flex justify-center items-center ">
-              <img src={assets.lecturer} className="w-[35px]" alt="students" />
+              <img src={assets.lecturer} className="w-[35px]" alt="lecturer" />
               <h1>Lecturer</h1>
             </div>
             <button className="pr-1" onClick={() => toggleSection("lecturer")}>
@@ -98,6 +126,8 @@ const SideBar = () => {
             </div>
           )}
         </div>
+        }
+        {role == "admin" && 
         <div className="mt-9">
           <div className="flex justify-between items-center py-1 mx-1 rounded-md ">
             <div className="pl-8 flex justify-center items-center ">
@@ -132,6 +162,8 @@ const SideBar = () => {
             ""
           )}
         </div>
+        }
+        {role == "admin" && 
         <div className="mt-9">
           <div className="flex justify-between items-center py-1 mx-1 rounded-md ">
             <div className="pl-8 flex justify-center items-center ">
@@ -166,6 +198,8 @@ const SideBar = () => {
             ""
           )}
         </div>
+        }
+        {role == "admin" && 
         <div className="mt-9">
           <div className="flex justify-between items-center py-1 mx-1 rounded-md ">
             <div className="pl-8 flex justify-center items-center ">
@@ -200,6 +234,7 @@ const SideBar = () => {
             ""
           )}
         </div>
+       }
       </div>
          <div className="p-3 border-t-2 border-gray-500">
           <div className="flex justify-between items-center py-1 mx-1 rounded-md ">

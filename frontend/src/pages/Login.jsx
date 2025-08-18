@@ -1,27 +1,30 @@
 import { useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from './../lib/axios';
+import { toast } from 'react-hot-toast';
 
 
 const Login = () => {
- 
-  const Navigate = useNavigate()
 
   const [showPassword,setShowPassword]=useState(false);
   const [formData,setFormData]= useState({
     email:"",
     password:""
   })
+
+  const login =async(data)=>{
+    try {
+      await axiosInstance.post('/auth/login',data)
+    } catch (error) {
+      toast.error(error.response.data || "something went wrong")
+    }
+  }
   
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    await login();
-    Navigate('/adminHome')
+    await login(formData);
   }
-
-  const login = async()=>{
-    await axios.post('http://localhost:5001/api/admin/login',formData,{withCredentials:true})
-  }
+  
+  
   return (
     <div className='bg-gray-200 h-screen flex items-center justify-center '>
       <div className='bg-gray-400 p-16 rounded-lg shadow-lg w-[500px] '>

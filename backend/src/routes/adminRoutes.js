@@ -1,5 +1,5 @@
 import express from 'express'
-import {addLecturer, addStudent, adminLogin, deleteLecturer, deleteStudent, listLecturer, listStudents, logout, updateLecturer, updateStudent } from './../controllers/Admin/admin.controller.js';
+import {addLecturer, addStudent, deleteLecturer, deleteStudent, listLecturer, listStudents, updateLecturer, updateStudent } from './../controllers/Admin/admin.controller.js';
 import { adminInfo, lecturerInfo, register, studentInfo, updateUser } from './../controllers/Admin/user.controller.js';
 import { addSubject, deleteSubject, editSubject, listGrade, listSubject, totalGpa } from '../controllers/Admin/academic.controller.js';
 import { protectRoute } from '../middleware/auth.middleware.js';
@@ -9,9 +9,7 @@ import upload from './../middleware/multer.js';
 const router= express.Router()
 
 //auth
-router.post('/login',adminLogin);
 router.post('/register',upload.single("profilePic"),register);//protectRoute("admin")
-router.post('/logout',protectRoute("admin","lecturer","student"),logout);
 
 //admin
 router.put('/update-users/:id',protectRoute("admin"),updateUser);

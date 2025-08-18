@@ -1,15 +1,27 @@
-import  { useEffect } from 'react'
-import { useAdminStore } from '../../store/useAdminStore'
+import  { useEffect,useState} from 'react'
 import { Link } from 'react-router-dom'
 import { Eye } from 'lucide-react'
+import { axiosInstance } from "../../lib/axios";
+import toast from 'react-hot-toast'
 
 const Subjects = () => {
 
-  const {subjects,listSubjects}= useAdminStore()
+   const [subjects,setSubjects]= useState([]);
+
+
+   const listSubjects = async()=>{
+      try {
+        const res = await axiosInstance.get('/admin/subjects')
+        setSubjects(res.data)
+      } catch (error) {
+       toast.error(error.response?.data?.message || "Something went wrong")
+      }
+    }
 
   useEffect(()=>{
     listSubjects()
   },[])
+
   return (
     <div>
       <div className='mt-6'>

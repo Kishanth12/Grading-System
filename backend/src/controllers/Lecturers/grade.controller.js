@@ -1,12 +1,13 @@
 import Grade from "../../models/grade.model.js";
+import Subject from "../../models/subject.model.js";
 
 
 export const addGrade = async (req, res) => {
   try {
     const lecturerId = req.user._id; // from middleware (logged-in user)
-    const { student, subject, marks, gradeLetter, gpaPoint } = req.body;
+    const { student, subject, marks } = req.body;
 
-    if (!student || !subject || !marks || !gradeLetter || gpaPoint) {
+    if (!student || !subject || !marks) {
       return res.status(400).json({ message: "All fields are required" });
     }
     if (
@@ -15,12 +16,40 @@ export const addGrade = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Marks must be between 0 and 100" });
     }
-    if (gpaPoint < 0 || gpaPoint > 4.0) {
-      return res.status(400).json({ message: "GPA point must be between 0 and 4.0" });
+    const totalMarks = (marks.assignment/100*40 + marks.finalExam/100*60);
+        let gradeLetter, gpa;
+
+    if (totalMarks >= 85) {
+      gradeLetter = "A+";
+      gpa = 4.0;
+    } else if (totalMarks >= 70) {
+      gradeLetter = "A";
+      gpa = 4.0;
+    } else if (totalMarks >= 65) {
+      gradeLetter = "B+";
+      gpa = 3.7;
+    } else if (totalMarks >= 55) {
+      gradeLetter = "B";
+      gpa = 3.5;
+    } else if (totalMarks >= 45) {
+      gradeLetter = "C+";
+      gpa = 3.0;
+    } else if (totalMarks >= 40) {
+      gradeLetter = "C";
+      gpa = 2.0;
+    } else {
+      gradeLetter = "F";
+      gpa = 0.0;
     }
+    const subjectData=await Subject.findOne({name:subject,lecturer: lecturerId});
+      if (!subjectData) {
+      return res.status(404).json({ message: "Subject not found" });
+    }
+    const credit = subjectData.credit;
+    const gpaPoint = gpa * credit;
     const newGrade = new Grade({
       student,
-      subject,
+      subject:subjectData._id,
       lecturer: lecturerId,
       marks,
       gradeLetter,
