@@ -9,7 +9,7 @@ import upload from './../middleware/multer.js';
 const router= express.Router()
 
 //auth
-router.post('/register',upload.single("profilePic"),register);//protectRoute("admin")
+router.post('/register',protectRoute("admin"),upload.single("profilePic"),register);//
 
 //admin
 router.put('/update-users/:id',protectRoute("admin"),updateUser);
@@ -19,24 +19,24 @@ router.get('/adminInfo',protectRoute("admin"),adminInfo);
 
 
 //student
-router.post('/students/:userId',addStudent)//protectRoute("admin")
-router.get('/students',listStudents);//,protectRoute("admin")
+router.post('/students/:userId',protectRoute("admin"),addStudent)//
+router.get('/students',protectRoute("admin"),listStudents);//
 router.delete('/student/:id',protectRoute("admin"),deleteStudent)
 router.put('/student/:id',protectRoute("admin"),updateStudent)
-router.get('/studentInfo/:id',studentInfo)//,protectRoute("admin")
+router.get('/studentInfo/:id',protectRoute("admin"),studentInfo)//
 
 
 //lecturer
-router.post('/lecturer/:userId',addLecturer)//protectRoute("admin")
-router.get('/lecturers',listLecturer);//,protectRoute("admin")
+router.post('/lecturer/:userId',protectRoute("admin"),addLecturer)//
+router.get('/lecturers',protectRoute("admin"),listLecturer);//
 router.delete('/lecturer/:id',protectRoute("admin"),deleteLecturer)
 router.put('/lecturer/:id',protectRoute("admin"),updateLecturer)
-router.get('/lecturerInfo/:id',lecturerInfo)//,protectRoute("admin"),
+router.get('/lecturerInfo/:id',protectRoute("admin"),lecturerInfo)//
 
 
 //subjects
-router.post('/addSubjects',addSubject);//,protectRoute("admin")
-router.get('/subjects',listSubject);//,protectRoute("admin")
+router.post('/addSubjects',protectRoute("admin"),addSubject);//
+router.get('/subjects',protectRoute("admin"),listSubject);//
 router.put('/subjects/:id',protectRoute("admin"),editSubject);
 router.delete('/subjects/:id',protectRoute("admin"),deleteSubject);
 

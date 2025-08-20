@@ -1,5 +1,6 @@
 import User from './../models/user.model.js';
 import bcrypt from 'bcrypt'
+import generateToken from './../lib/utils.js';
 
 export const login = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = generateToken(user._id,user.role,res)
+    generateToken(user._id,user.role,res)
 
     res.json({
       user: {
@@ -22,12 +23,16 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+    console.log(error)
   }
 };
 
 export const checkAuth=(req,res)=>{
   try {
-    res.status(200).json(req.user);
+      if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    res.status(200).json({ success:true, user: req.user });
   } catch (error) {
     console.log("Error in checkAuth controller",error.message)
     return res.status(500).json({message:"Internal server Error"})

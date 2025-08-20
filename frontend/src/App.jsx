@@ -17,6 +17,7 @@ import AddGrade from "./pages/Lecturer/AddGrade";
 import { axiosInstance } from "./lib/axios";
 import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
+import ErrorPage from "./pages/ErrorPage";
 
 const App = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -25,7 +26,11 @@ const App = () => {
   const checkAuth = async () => {
     try {
       const res = await axiosInstance.get("/auth/checkAuth");
-      setAuthUser(res.data);
+      if (res.data.success) {
+        setAuthUser(res.data.user);
+      } else {
+        setAuthUser(null);
+      }
     } catch (error) {
       setAuthUser(null);
     } finally {
@@ -37,7 +42,7 @@ const App = () => {
     checkAuth();
   }, []);
 
-  if (loading) {
+  if (loading && !authUser) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="w-10 h-10 animate-spin" />
@@ -45,27 +50,54 @@ const App = () => {
     );
   }
 
-
   return (
     <div className="bg-gray-50 h-screen">
-      <NavBar authUser={authUser} setAuthUser={setAuthUser} role={authUser?.role} />
+      <NavBar
+        authUser={authUser}
+        setAuthUser={setAuthUser}
+        role={authUser?.role}
+      />
       <hr />
       <Routes>
         <Route
           path="/lecturerInfo/:id"
-          element={authUser ? <LecturerInfo /> : <Navigate to="/login" />}
+          element={
+            authUser?.role === "admin" ? (
+              <LecturerInfo />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/studentInfo/:id"
-          element={authUser ? <StudentInfo /> : <Navigate to="/login" />}
+          element={
+            authUser?.role === "admin" ? (
+              <StudentInfo />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/addGrade/:id"
-          element={authUser ? <AddGrade /> : <Navigate to="/login" />}
+          element={
+            authUser?.role === "lecturer" ? (
+              <AddGrade />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/login"
-          element={!authUser ? <Login /> : <Navigate to="/" />}
+          element={
+            !authUser ? (
+              <Login setAuthUser={setAuthUser} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
 
         <Route
@@ -78,43 +110,86 @@ const App = () => {
                   <Routes>
                     <Route
                       path="/adminHome"
-                      element={authUser ? <AdminHome /> : <Navigate to="/login" />}
+                      element={
+                        authUser ? <AdminHome /> : <Navigate to="/login" />
+                      }
                     />
                     <Route
                       path="/addStudent/:userId"
-                      element={authUser ? <AddStudent /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <AddStudent />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/registerUser"
-                      element={authUser ? <AddUser /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <AddUser />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/addLecturer/:userId"
-                      element={authUser ? <AddLecturer /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <AddLecturer />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/lecturers"
-                      element={authUser ? <Lecturer /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <Lecturer />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/students"
-                      element={authUser ? <Students /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <Students />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/subjects"
-                      element={authUser ? <Subjects /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <Subjects />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
                     <Route
                       path="/addSubject"
-                      element={authUser ? <AddSubject /> : <Navigate to="/login" />}
+                      element={
+                        authUser?.role === "admin" ? (
+                          <AddSubject />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
+                      }
                     />
+                   
                   </Routes>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-screen text-2xl">
-                404 Not Found
-              </div>
+              <ErrorPage />
             )
           }
         />

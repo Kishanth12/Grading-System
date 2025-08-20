@@ -93,7 +93,7 @@ const SideBar = ({role}) => {
           )}
         </div>
         }
-        {role == "lecturer" && 
+        {role == "admin" && 
         <div className="mt-9">
           <div className="flex justify-between py-1 mx-1 rounded-md">
             <div className="pl-7 flex justify-center items-center ">

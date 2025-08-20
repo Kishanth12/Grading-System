@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { axiosInstance } from './../lib/axios';
 import { toast } from 'react-hot-toast';
+import {  useNavigate } from 'react-router-dom';
 
 
-const Login = () => {
+const Login = ({setAuthUser}) => {
+  const navigate = useNavigate()
 
   const [showPassword,setShowPassword]=useState(false);
   const [formData,setFormData]= useState({
@@ -13,7 +15,10 @@ const Login = () => {
 
   const login =async(data)=>{
     try {
-      await axiosInstance.post('/auth/login',data)
+     const res = await axiosInstance.post('/auth/login',data);
+     setAuthUser(res.data.user)
+     navigate('/');
+    
     } catch (error) {
       toast.error(error.response.data || "something went wrong")
     }
@@ -46,7 +51,7 @@ const Login = () => {
           <button className='pl-1' type='button' onClick={()=>setShowPassword(!showPassword)}>show</button>
         </div>
         <div className='mt-2'>
-        <button className='p-1 w-56 ml-14 text-white bg-gray-700 rounded-md' ype='submit'>Login</button>
+        <button className='p-1 w-56 ml-14 text-white bg-gray-700 rounded-md' type='submit'>Login</button>
         </div>
         </form>
       </div>

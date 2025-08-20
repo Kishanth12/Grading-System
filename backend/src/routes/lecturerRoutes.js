@@ -10,7 +10,7 @@ router.post('/login',login);
 router.get('/profile',protectRoute("lecturer"),profile);
 router.get('/students',protectRoute("lecturer"),listStudents);
 router.get('/students/:id',protectRoute("lecturer"),infoStudents);
-router.post('/addGrade',addGrade);//,protectRoute("lecturer")
+router.post('/addGrade',protectRoute("lecturer"),addGrade);//
 router.get('/studentSub',getStudentSubjects)
 router.put('/grades/:id',protectRoute("lecturer"),updateGrade);
 router.get('/subjects/assigned',protectRoute("lecturer"),assignedSubjects);
