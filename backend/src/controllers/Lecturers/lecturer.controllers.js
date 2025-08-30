@@ -5,14 +5,13 @@ import Subject from "../../models/subject.model.js";
 //list students for lecturers
 export const listStudents = async (req, res) => {
   try {
-    const lecturerId = req.user._id;
-    const lecturer = await Lecturer.findById(lecturerId)
+    const lecturer = await Lecturer.findOne({ userId: req.user._id })
       .populate({
         path: "students",
         select: "fullName admissionNo batch department",
         populate: {
           path: "grades",
-          match: { lecturer: lecturerId },
+          match: { userId: req.user._id },
           select: "subject gpaPoint ",
           populate: {
             path: "subject",

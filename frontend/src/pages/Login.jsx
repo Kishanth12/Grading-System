@@ -17,7 +17,7 @@ const Login = ({setAuthUser}) => {
     try {
      const res = await axiosInstance.post('/auth/login',data);
      setAuthUser(res.data.user)
-     navigate('/');
+     navigate('/dashboard');
     
     } catch (error) {
       toast.error(error.response.data || "something went wrong")

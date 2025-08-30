@@ -11,14 +11,14 @@ const NavBar = ({authUser,setAuthUser}) => {
     try {
       await axiosInstance.post('/auth/logout')
       setAuthUser(null)
-      navigate('/login')
+      navigate('/')
     } catch (error) {
       toast.error("Something Went Wrong")
     }
   }
 
   return (
-    <div className='bg-gray-50 px-10 pr-20 border w-full h-[80px]'>
+    <div className='bg-gray-50 px-10 pr-20 border h-[80px]'>
     <div className='flex flex-row pt-1  justify-between items-center'>
       <div className='m-1'>
         <img className='w-15 h-16 rounded-sm' src={assets.logo} alt="logo" />

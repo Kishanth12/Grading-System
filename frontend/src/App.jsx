@@ -1,7 +1,4 @@
-import SideBar from "./components/SideBar";
-import NavBar from "./components/NavBar";
 import AddStudent from "./pages/Admin/AddStudent";
-import AdminHome from "./pages/Admin/AdminHome";
 import Login from "./pages/Login";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -18,6 +15,10 @@ import { axiosInstance } from "./lib/axios";
 import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
 import ErrorPage from "./pages/ErrorPage";
+import Dashboard from './pages/Admin/Dashboard';
+import AdminHome from './pages/Admin/AdminHome';
+import LecturerStudents from "./pages/Lecturer/LecturerStudents";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -26,12 +27,9 @@ const App = () => {
   const checkAuth = async () => {
     try {
       const res = await axiosInstance.get("/auth/checkAuth");
-      if (res.data.success) {
-        setAuthUser(res.data.user);
-      } else {
-        setAuthUser(null);
-      }
-    } catch (error) {
+      if (res.data.success) setAuthUser(res.data.user);
+      else setAuthUser(null);
+    } catch {
       setAuthUser(null);
     } finally {
       setLoading(false);
@@ -42,7 +40,7 @@ const App = () => {
     checkAuth();
   }, []);
 
-  if (loading && !authUser) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="w-10 h-10 animate-spin" />
@@ -51,148 +49,30 @@ const App = () => {
   }
 
   return (
-    <div className="bg-gray-50 h-screen">
-      <NavBar
-        authUser={authUser}
-        setAuthUser={setAuthUser}
-        role={authUser?.role}
-      />
-      <hr />
+    <div className="bg-gray-50 min-h-screen">
       <Routes>
-        <Route
-          path="/lecturerInfo/:id"
-          element={
-            authUser?.role === "admin" ? (
-              <LecturerInfo />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/studentInfo/:id"
-          element={
-            authUser?.role === "admin" ? (
-              <StudentInfo />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/addGrade/:id"
-          element={
-            authUser?.role === "lecturer" ? (
-              <AddGrade />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            !authUser ? (
-              <Login setAuthUser={setAuthUser} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+        {/* Login route */}
+        <Route path="/login" element={!authUser ? <Login setAuthUser={setAuthUser} /> : <Navigate to="/dashboard" />} />
+        <Route path="/" element={<HomePage />} />
 
-        <Route
-          path="/*"
-          element={
-            authUser ? (
-              <div className="flex w-full">
-                <SideBar role={authUser?.role} />
-                <div className="w-[75%] mx-auto ml-10 text-gray-800 text-base">
-                  <Routes>
-                    <Route
-                      path="/adminHome"
-                      element={
-                        authUser ? <AdminHome /> : <Navigate to="/login" />
-                      }
-                    />
-                    <Route
-                      path="/addStudent/:userId"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <AddStudent />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/registerUser"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <AddUser />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/addLecturer/:userId"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <AddLecturer />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/lecturers"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <Lecturer />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/students"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <Students />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/subjects"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <Subjects />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                    <Route
-                      path="/addSubject"
-                      element={
-                        authUser?.role === "admin" ? (
-                          <AddSubject />
-                        ) : (
-                          <Navigate to="/login" />
-                        )
-                      }
-                    />
-                   
-                  </Routes>
-                </div>
-              </div>
-            ) : (
-              <ErrorPage />
-            )
-          }
-        />
+        {/* Protected AdminHome layout */}
+          <Route element={authUser ? <AdminHome authUser={authUser} setAuthUser={setAuthUser} /> : <Navigate to="/" />}>
+          <Route path="/addStudent/:userId" element={authUser?.role === "admin" ? <AddStudent /> : <Navigate to="/login" />} />
+          <Route path='/dashboard' element={authUser ? <Dashboard/> : <Navigate to='/login' />}/>
+          <Route path="/registerUser" element={authUser?.role === "admin" ? <AddUser /> : <Navigate to="/login" />} />
+          <Route path="/addLecturer/:userId" element={authUser?.role === "admin" ? <AddLecturer /> : <Navigate to="/login" />} />
+          <Route path="/lecturers" element={authUser?.role === "admin" ? <Lecturer /> : <Navigate to="/login" />} />
+          <Route path="/students" element={authUser?.role === "admin" ? <Students /> : <Navigate to="/login" />} />
+          <Route path="/LectStudents" element={authUser?.role === "lecturer" ? <LecturerStudents /> : <Navigate to="/login" />} />
+          <Route path="/subjects" element={authUser?.role === "admin" ? <Subjects /> : <Navigate to="/login" />} />
+          <Route path="/addSubject" element={authUser?.role === "admin" ? <AddSubject /> : <Navigate to="/login" />} />
+          <Route path="/addGrade/:id" element={authUser?.role === "lecturer" ? <AddGrade /> : <Navigate to="/login" />} />
+          <Route path="/lecturerInfo/:id" element={authUser?.role === "admin" ? <LecturerInfo /> : <Navigate to="/login" />} />
+          <Route path="/studentInfo/:id" element={authUser?.role === "admin" ? <StudentInfo /> : <Navigate to="/login" />} />
+
+          {/* Catch-all */}
+          <Route path="*" element={<ErrorPage />} />
+        </Route>
       </Routes>
       <Toaster />
     </div>
