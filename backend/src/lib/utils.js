@@ -5,14 +5,11 @@ const generateToken = (userId, role, res) => {
     expiresIn: "7d",
   });
 
-  // check environment
-  const isProduction = process.env.NODE_ENV === "production";
-
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,                  // prevent JS access
-    sameSite: isProduction ? "none" : "lax", // "none" needed for cross-site in prod
-    secure: isProduction,            // must be true in prod (HTTPS)
+    sameSite:"lax", 
+    secure: false
   });
 
   return token;

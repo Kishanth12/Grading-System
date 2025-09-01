@@ -8,6 +8,7 @@ const AddSubject = () => {
     name: "",
     credit: "",
     department:'',
+    batch:'',
     semester:'',
   });
 
@@ -91,6 +92,22 @@ const AddSubject = () => {
             <option value="HNDA">HNDA</option>
           </select>
         </div>
+         <div className="mt-6">
+          <label>
+            <span className="text-xl text-gray-700">Select Batch</span>
+          </label>
+          <select
+            value={formData.batch}
+            onChange={(e) =>
+              setFormData({ ...formData, batch: e.target.value })
+            }
+            className="ml-6 text-md text-gray-950"
+          >
+            <option value="">--Select--</option>
+            <option value="FirstYear">1st Year</option>
+            <option value="SecondYear">2nd Year</option>
+          </select>
+        </div>
         <div className="mt-6">
           <label>
             <span className="text-xl text-gray-700">Select Semester</span>
@@ -106,8 +123,6 @@ const AddSubject = () => {
             <option value="">--Select--</option>
             <option value="FirstYear">First Semester</option>
             <option value="SecondYear">Second Semester</option>
-            <option value="ThirdYear">Third Semester</option>
-            <option value="FourthYear">Fourth Semester</option>
           </select>
         </div>
         

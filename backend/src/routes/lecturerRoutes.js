@@ -13,7 +13,7 @@ router.get('/students/:id',protectRoute("lecturer"),infoStudents);
 router.post('/addGrade',protectRoute("lecturer"),addGrade);//
 router.get('/studentSub',getStudentSubjects)
 router.put('/grades/:id',protectRoute("lecturer"),updateGrade);
-router.get('/subjects/assigned',protectRoute("lecturer"),assignedSubjects);
+router.get('/subjectsAssigned/:id',protectRoute("lecturer"),assignedSubjects);
 
 
 

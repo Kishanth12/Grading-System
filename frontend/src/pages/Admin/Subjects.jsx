@@ -34,6 +34,7 @@ const Subjects = () => {
           <th className= 'px-6 py-3 text-left'>subCode</th>
           <th className='px-6 py-3 text-left'>name</th>
           <th className='px-6 py-3 text-left'>Department</th>
+          <th className='px-6 py-3 text-left'>Batch</th>
           <th className='px-6 py-3 text-left'>semester</th>
           <th className='px-6 py-3 text-left'>View</th>
           </tr>
@@ -44,6 +45,7 @@ const Subjects = () => {
              <td className=' px-6 py-3'>{subject.subCode}</td>
              <td className=' px-6 py-3'>{subject.name}</td>
              <td className=' px-6 py-3'>{subject.department}</td>
+             <td className=' px-6 py-3'>{subject.batch}</td>
              <td className=' px-6 py-3'>{subject.semester}</td>
              <td className=' px-6 py-3'colSpan={2}>
               <Link to={`/subjectInfo/${subject._id}`}>

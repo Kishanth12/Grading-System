@@ -8,8 +8,8 @@ const gradeSchema = new mongoose.Schema({
         assignment: { type: Number, required: true, min: 0, max: 100 },
          finalExam: { type: Number, required: true, min: 0, max: 100 }
     },
-    gradeLetter:{type:String,required:true},
-    gpaPoint: {type: Number,required: true,min: 0,max: 4.0},
+    gradeLetter:{type:String},
+    gpaPoint: {type: Number,min: 0,max: 4.0},
 
 },{timestamps:true})
 

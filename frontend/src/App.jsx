@@ -16,9 +16,11 @@ import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
 import ErrorPage from "./pages/ErrorPage";
 import Dashboard from './pages/Admin/Dashboard';
-import AdminHome from './pages/Admin/AdminHome';
+import Main from './pages/Main';
 import LecturerStudents from "./pages/Lecturer/LecturerStudents";
 import HomePage from "./pages/HomePage";
+import StudentGrade from "./pages/Lecturer/StudentGrade";
+import EditLecturer from "./pages/Admin/EditLecturer";
 
 const App = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -56,17 +58,19 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
 
         {/* Protected AdminHome layout */}
-          <Route element={authUser ? <AdminHome authUser={authUser} setAuthUser={setAuthUser} /> : <Navigate to="/" />}>
+          <Route element={authUser ? <Main authUser={authUser} setAuthUser={setAuthUser} /> : <Navigate to="/" />}>
           <Route path="/addStudent/:userId" element={authUser?.role === "admin" ? <AddStudent /> : <Navigate to="/login" />} />
           <Route path='/dashboard' element={authUser ? <Dashboard/> : <Navigate to='/login' />}/>
           <Route path="/registerUser" element={authUser?.role === "admin" ? <AddUser /> : <Navigate to="/login" />} />
           <Route path="/addLecturer/:userId" element={authUser?.role === "admin" ? <AddLecturer /> : <Navigate to="/login" />} />
           <Route path="/lecturers" element={authUser?.role === "admin" ? <Lecturer /> : <Navigate to="/login" />} />
+          <Route path="/EditLecturer/:id" element={authUser?.role === "admin" ? <EditLecturer /> : <Navigate to="/login" />} />
           <Route path="/students" element={authUser?.role === "admin" ? <Students /> : <Navigate to="/login" />} />
           <Route path="/LectStudents" element={authUser?.role === "lecturer" ? <LecturerStudents /> : <Navigate to="/login" />} />
           <Route path="/subjects" element={authUser?.role === "admin" ? <Subjects /> : <Navigate to="/login" />} />
           <Route path="/addSubject" element={authUser?.role === "admin" ? <AddSubject /> : <Navigate to="/login" />} />
           <Route path="/addGrade/:id" element={authUser?.role === "lecturer" ? <AddGrade /> : <Navigate to="/login" />} />
+          <Route path="/studentGrade" element={authUser?.role === "lecturer" ? <StudentGrade /> : <Navigate to="/login" />} />
           <Route path="/lecturerInfo/:id" element={authUser?.role === "admin" ? <LecturerInfo /> : <Navigate to="/login" />} />
           <Route path="/studentInfo/:id" element={authUser?.role === "admin" ? <StudentInfo /> : <Navigate to="/login" />} />
 

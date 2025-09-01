@@ -224,7 +224,7 @@ const SideBar = ({role}) => {
           </div>
           {openSection === "grade" ? (
             <div className="mt-3 text-lg">
-              <NavLink to="/list" className={navClass}>
+              <NavLink to="/studentGrade" className={navClass}>
                 <div className="mt-1 py-1 pl-10">
                   <div className="flex items-center gap-2">
                     <ListTree />

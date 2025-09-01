@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { useState } from "react";
 import { Mail, Phone, MapPinHouse } from "lucide-react";
+import toast from "react-hot-toast";
 
 const LecturerInfo = () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ const LecturerInfo = () => {
     return <p>loading</p>;
   }
   return (
-    <div className="h-[calc(100vh-100px)] w-10/12 mx-auto  bg-white shadow-lg rounded-2xl mt-2">
+    <div className="h-[calc(100vh-140px)]  mx-auto  bg-white shadow-lg rounded-2xl mt-1">
       <div className="flex">
         <div className="w-[25%] h-full flex-col justify-end items-center mt-4  ">
           <div className="rounded-xl flex justify-center items-center border-2 w-[300px] aspect-square border-gray-400">
@@ -36,9 +37,11 @@ const LecturerInfo = () => {
             />
           </div>
           <div className="text-lg flex flex-col mt-6">
-            <button className="p-2 bg-green-600 font-semibold rounded-md hover:bg-green-700 w-[300px] transition-all duration-200 text-white ">
-              Edit Lecturer
-            </button>
+            <Link to={`/editLecturer/${lecturer._id}`}>
+              <button className="p-2 bg-green-600 font-semibold rounded-md hover:bg-green-700 w-[300px] transition-all duration-200 text-white ">
+                Edit Lecturer
+              </button>
+            </Link>
             <button className="p-2 mt-2 bg-red-600 font-semibold rounded-md hover:bg-red-700 hover:text-gray-100 transition-all duration-200 w-[300px] text-white">
               Delete Lecturer
             </button>
@@ -106,24 +109,24 @@ const LecturerInfo = () => {
                 Assigned Subjects
               </h1>
             </div>
-            <div className="mt-2">
-              <table className="divide-y divide-gray-100 rounded-lg shadow-md w-[95%] m overflow-y-auto">
-                <thead className="bg-gray-100 text-gray-700 uppercase text-sm">
-                  <tr>
-                    <th className="px-6 py-3 text-left">Sub Code</th>
-                    <th className="px-6 py-3 text-left">Subject Name</th>
-                    <th className="px-6 py-3 text-left">batch</th>
-                    <th className="px-6 py-3 text-left">Semester</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200 text-gray-700">
-                  <tr>
-                    <td className=" px-6 py-3"></td>
-                    <td className=" px-6 py-3"></td>
-                    <td className=" px-6 py-3"></td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="mt-2 ml-4">
+              {lecturer.assignedSubjects &&
+              lecturer.assignedSubjects.length > 0 ? (
+                <ul className="list-disc list-inside space-y-2">
+                  {lecturer.assignedSubjects.map((subject) => (
+                    <li key={subject._id} className="text-gray-700">
+                      <span className="font-semibold pr-2">Code:</span>{" "}
+                      {subject.subCode} <br />
+                      <span className="font-semibold pl-5 pr-2">Name:</span>{" "}
+                      {subject.name} <br />
+                      <span className="font-semibold pl-5 pr-2">Department:</span>{" "}
+                      {subject.department}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 italic">No subjects assigned</p>
+              )}
             </div>
           </div>
         </div>

@@ -6,10 +6,10 @@ import Student from "../../models/student.model.js";
 
 export const addSubject = async (req, res) => {
   try {
-    const { subCode, name, credit, semester, department, lecturerId, schedule } = req.body;
+    const { subCode, name, credit, semester, department, lecturerId, schedule,batch } = req.body;
 
-    if (!subCode || !name || !credit || !semester || !department) {
-      return res.status(400).json({ message: "Required fields: subCode, name, credit, semester, department" });
+    if (!subCode || !name || !credit || !semester || !department || !batch) {
+      return res.status(400).json({ message: "Required fields: subCode, name, credit, semester, department,batch" });
     }
 
     const existing = await Subject.findOne({ subCode });
@@ -30,6 +30,7 @@ export const addSubject = async (req, res) => {
       credit,
       semester,
       department,
+      batch,
       lecturer: lecturer ? lecturer._id : null,
       schedule: schedule || {}
     });

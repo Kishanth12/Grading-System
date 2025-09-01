@@ -48,9 +48,9 @@ export const register = async(req,res)=>{
 
       if(newUser){
         await newUser.save();
-        generateToken(newUser._id,res)
+        
 
-         res.status(200).json({
+         res.status(201).json({
             _id:newUser._id,
             fullName: newUser.fullName,
             email: newUser.email,
@@ -132,7 +132,12 @@ export const adminInfo = async(req,res)=>{
 export const lecturerInfo = async(req,res)=>{
   try {
     const{id} = req.params;
-    const lecturer= await Lecturer.findById(id).populate("userId","fullName email password profilePic phoneNo address")
+    const lecturer= await Lecturer.findById(id)
+    .populate("userId","fullName email password profilePic phoneNo address")
+    .populate({
+            path: "assignedSubjects",
+            select: "name subCode department"
+     })
     if(!lecturer){
       return res.status(404).json({message:"Not Found"})
     }

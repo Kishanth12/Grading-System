@@ -8,16 +8,22 @@ export const listStudents = async (req, res) => {
     const lecturer = await Lecturer.findOne({ userId: req.user._id })
       .populate({
         path: "students",
-        select: "fullName admissionNo batch department",
-        populate: {
-          path: "grades",
-          match: { userId: req.user._id },
-          select: "subject gpaPoint ",
-          populate: {
-            path: "subject",
-            select: "name code"
+        select: "fullName admissionNo batch department userId",
+        populate: [
+          {
+            path: "userId",
+            select: "fullName email" 
+          },
+          {
+            path: "grades",
+            match: { userId: req.user._id },
+            select: "subject gpaPoint marks",
+            populate: {
+              path: "subject",
+              select: "name subCode"
+            }
           }
-        }
+        ]
       });
 
     if (!lecturer) {
@@ -79,7 +85,7 @@ export const infoStudents = async (req, res) => {
           select: "subject gpaPoint marks gradeLetter",
           populate: {
             path: "subject",
-            select: "name code"
+            select: "name subCode"
           }
         }
       });
